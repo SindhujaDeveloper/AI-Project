@@ -1,95 +1,207 @@
-import Image from 'next/image'
-import styles from './page.module.css'
+"use client";
+import { useEffect, useState } from "react";
+import "bootstrap/dist/css/bootstrap.min.css";
+import styles from "./page.module.css";
+import { Button } from "react-bootstrap";
 
 export default function Home() {
+  const [keyCode, setKeyCode] = useState(0);
+
+  const initialBoard = [
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 0, 0, 0],
+    [0, 2, 0, 0],
+  ];
+  const [board, setBoard] = useState(initialBoard);
+
+  const handleKeyPress = (event: any) => {
+    setKeyCode(event.keyCode);
+  };
+
+  const generateRandomSquareNumber = () => {
+    const squareNumbers = [2, 4];
+    const randomIndex = Math.floor(Math.random() * squareNumbers.length);
+    return squareNumbers[randomIndex];
+  };
+
+  const placeRandomSquareInBoard = (updatedBoard: any) => {
+    const randomSquare = generateRandomSquareNumber();
+    const emptyCells = [];
+    for (let row = 0; row < updatedBoard.length; row++) {
+      for (let col = 0; col < updatedBoard[row].length; col++) {
+        if (updatedBoard[row][col] === 0) {
+          emptyCells.push({ row, col });
+        }
+      }
+    }
+
+    if (emptyCells.length > 0) {
+      const randomIndex = Math.floor(Math.random() * emptyCells.length);
+      const randomCell = emptyCells[randomIndex];
+      updatedBoard[randomCell.row][randomCell.col] = randomSquare;
+    } else {
+      alert("Game Over");
+    }
+    setBoard(updatedBoard);
+  };
+
+  const mergeUpperColumn = (
+    board: any,
+    columnIndex: number,
+    direction: string
+  ) => {
+    const newBoard = [...board];
+    const column = newBoard.map((row) => row[columnIndex]);
+    const rowOrColumn = direction === "upper" ? column : newBoard[columnIndex];
+
+    for (let rowIndex = 1; rowIndex < rowOrColumn.length; rowIndex++) {
+      if (rowOrColumn[rowIndex] !== 0) {
+        let mergeIndex = rowIndex - 1;
+
+        while (mergeIndex >= 0 && rowOrColumn[mergeIndex] === 0) {
+          mergeIndex--;
+        }
+
+        if (
+          mergeIndex >= 0 &&
+          rowOrColumn[mergeIndex] === rowOrColumn[rowIndex]
+        ) {
+          rowOrColumn[mergeIndex] *= 2;
+          rowOrColumn[rowIndex] = 0;
+        } else {
+          if (mergeIndex !== rowIndex - 1) {
+            rowOrColumn[mergeIndex + 1] = rowOrColumn[rowIndex];
+            rowOrColumn[rowIndex] = 0;
+          }
+        }
+      }
+    }
+
+    if (direction === "upper") {
+      for (let rowIndex = 0; rowIndex < column.length; rowIndex++) {
+        newBoard[rowIndex][columnIndex] = column[rowIndex];
+      }
+    }
+
+    return newBoard;
+  };
+
+  const mergeLowerColumn = (
+    board: any,
+    columnIndex: number,
+    direction: string
+  ) => {
+    const newBoard = [...board];
+    const column = newBoard.map((row) => row[columnIndex]);
+
+    const rowOrColumn = direction === "lower" ? column : newBoard[columnIndex];
+    for (let rowIndex = rowOrColumn.length - 2; rowIndex >= 0; rowIndex--) {
+      if (rowOrColumn[rowIndex] !== 0) {
+        let mergeIndex = rowIndex + 1;
+
+        while (
+          mergeIndex < rowOrColumn.length &&
+          rowOrColumn[mergeIndex] === 0
+        ) {
+          mergeIndex++;
+        }
+
+        if (
+          mergeIndex < rowOrColumn.length &&
+          rowOrColumn[mergeIndex] === rowOrColumn[rowIndex]
+        ) {
+          rowOrColumn[mergeIndex] *= 2;
+          rowOrColumn[rowIndex] = 0;
+        } else {
+          if (mergeIndex !== rowIndex + 1) {
+            rowOrColumn[mergeIndex - 1] = rowOrColumn[rowIndex];
+            rowOrColumn[rowIndex] = 0;
+          }
+        }
+      }
+    }
+
+    if (direction === "lower") {
+      for (let rowIndex = 0; rowIndex < rowOrColumn.length; rowIndex++) {
+        newBoard[rowIndex][columnIndex] = rowOrColumn[rowIndex];
+      }
+    }
+
+    return newBoard;
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+    if (keyCode === 38) {
+      for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
+        const updatedBoard = mergeUpperColumn(board, columnIndex, "upper");
+        setBoard(updatedBoard);
+      }
+      setKeyCode(0);
+      placeRandomSquareInBoard(board);
+    }
+    if (keyCode === 40) {
+      for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
+        const updatedBoard = mergeLowerColumn(board, columnIndex, "lower");
+        setBoard(updatedBoard);
+      }
+      setKeyCode(0);
+      placeRandomSquareInBoard(board);
+    } else if (keyCode === 39) {
+      for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
+        const updatedBoard = mergeLowerColumn(board, rowIndex, "right");
+        setBoard(updatedBoard);
+      }
+      setKeyCode(0);
+      placeRandomSquareInBoard(board);
+    } else if (keyCode === 37) {
+      for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
+        const updatedBoard = mergeUpperColumn(board, columnIndex, "left");
+        setBoard(updatedBoard);
+      }
+      setKeyCode(0);
+      placeRandomSquareInBoard(board);
+    }
+    return () => {
+      window.removeEventListener("keydown", handleKeyPress);
+    };
+  }, [keyCode]);
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>src/app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{' '}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div className="container mt-5 px-3 py-5 game-container">
+      <h1 className="text-center">2048 Game</h1>
+
+      <div className={styles.gameBoard}>
+        {board.map((row, rowIndex) => (
+          <div key={rowIndex} className={styles.row}>
+            {row.map((cellValue, colIndex) => (
+              <div
+                key={colIndex}
+                className={`${styles.cell} ${styles[`tile-${cellValue}`]}`}
+              >
+                {cellValue !== 0 ? cellValue : ""}
+              </div>
+            ))}
+          </div>
+        ))}
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
+      <div className={styles.buttons}>
+        <Button
+          className={styles.newGameBtn}
+          variant="info"
+          onClick={() => setBoard(initialBoard)}
+        >
+          New Game
+        </Button>
+        <Button
+          className={styles.resetBtn}
+          variant="danger"
+          onClick={() => setBoard(initialBoard)}
+        >
+          Reset
+        </Button>
       </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore the Next.js 13 playground.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
-  )
+    </div>
+  );
 }
