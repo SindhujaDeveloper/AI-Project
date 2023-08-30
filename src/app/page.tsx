@@ -206,7 +206,7 @@ export default function Home() {
 
   return (
     <Container>
-      <h1 className="text-center">2048 Game</h1>
+      <h1 className={`text-center ${styles.title}`}>2048 Game</h1>
       <div className={styles.main}>
         <div
           className={styles.gameBoard}

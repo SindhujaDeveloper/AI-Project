@@ -1,4 +1,5 @@
 .gameBoard {
+  margin-top: 2%;
   background-color: #c5b7a9;
   padding: 2%;
   width: 45%;
@@ -11,6 +12,10 @@
   align-items: center;
   justify-content: center;
   align-content: center;
+}
+
+.title {
+  margin-top: 3%;
 }
 
 .row {
@@ -28,7 +33,6 @@
   font-weight: bold;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   border: 2px solid aliceblue;
-
 }
 
 .tile-2 {
@@ -88,7 +92,7 @@
 
 
 .buttons {
-  margin-top: 2vw;
+  margin-top: 3%;
   display: flex;
   justify-content: center;
   gap: 1rem;
