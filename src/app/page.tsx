@@ -2,7 +2,7 @@
 import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./page.module.css";
-import { Button } from "react-bootstrap";
+import { Button, Container } from "react-bootstrap";
 
 export default function Home() {
   const [keyCode, setKeyCode] = useState(0);
@@ -132,7 +132,6 @@ export default function Home() {
 
   const handleMove = () => {
     if (keyCode === 38 || direction === "upper") {
-      console.log(keyCode, direction, "enter-upper");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
         const updatedBoard = mergeUpperColumn(board, columnIndex, "upper");
         setBoard(updatedBoard);
@@ -140,7 +139,6 @@ export default function Home() {
       setKeyCode(0);
       placeRandomSquareInBoard(board);
     } else if (keyCode === 40 || direction === "lower") {
-      console.log(keyCode, direction, "enter-lower");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
         const updatedBoard = mergeLowerColumn(board, columnIndex, "lower");
         setBoard(updatedBoard);
@@ -148,7 +146,6 @@ export default function Home() {
       setKeyCode(0);
       placeRandomSquareInBoard(board);
     } else if (keyCode === 39 || direction === "right") {
-      console.log(keyCode, direction, "enter-right");
       for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
         const updatedBoard = mergeLowerColumn(board, rowIndex, "right");
         setBoard(updatedBoard);
@@ -156,7 +153,6 @@ export default function Home() {
       setKeyCode(0);
       placeRandomSquareInBoard(board);
     } else if (keyCode === 37 || direction === "left") {
-      console.log(keyCode, direction, "enter-left");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
         const updatedBoard = mergeUpperColumn(board, columnIndex, "left");
         setBoard(updatedBoard);
@@ -209,43 +205,46 @@ export default function Home() {
   };
 
   return (
-    <div className="container mt-5 px-3 py-5 game-container">
+    <Container>
       <h1 className="text-center">2048 Game</h1>
-      <div
-        className={styles.gameBoard}
-        onTouchStart={handleTouchStart}
-        onTouchMove={handleTouchMove}
-        onTouchEnd={handleTouchEnd}
-      >
-        {board.map((row, rowIndex) => (
-          <div key={rowIndex} className={styles.row}>
-            {row.map((cellValue, colIndex) => (
-              <div
-                key={colIndex}
-                className={`${styles.cell} ${styles[`tile-${cellValue}`]}`}
-              >
-                {cellValue !== 0 ? cellValue : ""}
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
-      <div className={styles.buttons}>
-        <Button
-          className={styles.newGameBtn}
-          variant="info"
-          onClick={() => setBoard(initialBoard)}
+      <div className={styles.main}>
+        <div
+          className={styles.gameBoard}
+          onTouchStart={handleTouchStart}
+          onTouchMove={handleTouchMove}
+          onTouchEnd={handleTouchEnd}
         >
-          New Game
-        </Button>
-        <Button
-          className={styles.resetBtn}
-          variant="danger"
-          onClick={() => setBoard(initialBoard)}
-        >
-          Reset
-        </Button>
+          {board.map((row, rowIndex) => (
+            <div key={rowIndex} className={styles.row}>
+              {row.map((cellValue, colIndex) => (
+                <div
+                  key={colIndex}
+                  className={`${styles.cell} ${styles[`tile-${cellValue}`]}`}
+                >
+                  {cellValue !== 0 ? cellValue : ""}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
       </div>
-    </div>
+
+        <div className={styles.buttons}>
+          <Button
+            className={styles.newGameBtn}
+            variant="info"
+            onClick={() => setBoard(initialBoard)}
+          >
+            New Game
+          </Button>
+          <Button
+            className={styles.resetBtn}
+            variant="danger"
+            onClick={() => setBoard(initialBoard)}
+          >
+            Reset
+          </Button>
+        </div>
+    </Container>
   );
 }
