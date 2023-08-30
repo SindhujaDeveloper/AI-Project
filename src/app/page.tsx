@@ -6,6 +6,7 @@ import { Button } from "react-bootstrap";
 
 export default function Home() {
   const [keyCode, setKeyCode] = useState(0);
+  const [direction, setDirection] = useState("");
 
   const initialBoard = [
     [0, 0, 0, 0],
@@ -46,11 +47,7 @@ export default function Home() {
     setBoard(updatedBoard);
   };
 
-  const mergeUpperColumn = (
-    board: any,
-    columnIndex: number,
-    direction: string
-  ) => {
+  const mergeUpperColumn = (board: any, columnIndex: number) => {
     const newBoard = [...board];
     const column = newBoard.map((row) => row[columnIndex]);
     const rowOrColumn = direction === "upper" ? column : newBoard[columnIndex];
@@ -87,11 +84,7 @@ export default function Home() {
     return newBoard;
   };
 
-  const mergeLowerColumn = (
-    board: any,
-    columnIndex: number,
-    direction: string
-  ) => {
+  const mergeLowerColumn = (board: any, columnIndex: number) => {
     const newBoard = [...board];
     const column = newBoard.map((row) => row[columnIndex]);
 
@@ -134,30 +127,34 @@ export default function Home() {
   useEffect(() => {
     window.addEventListener("keydown", handleKeyPress);
     if (keyCode === 38) {
+      setDirection("upper");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
-        const updatedBoard = mergeUpperColumn(board, columnIndex, "upper");
+        const updatedBoard = mergeUpperColumn(board, columnIndex);
         setBoard(updatedBoard);
       }
       setKeyCode(0);
       placeRandomSquareInBoard(board);
     }
     if (keyCode === 40) {
+      setDirection("lower");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
-        const updatedBoard = mergeLowerColumn(board, columnIndex, "lower");
+        const updatedBoard = mergeLowerColumn(board, columnIndex);
         setBoard(updatedBoard);
       }
       setKeyCode(0);
       placeRandomSquareInBoard(board);
     } else if (keyCode === 39) {
+      setDirection("right");
       for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
-        const updatedBoard = mergeLowerColumn(board, rowIndex, "right");
+        const updatedBoard = mergeLowerColumn(board, rowIndex);
         setBoard(updatedBoard);
       }
       setKeyCode(0);
       placeRandomSquareInBoard(board);
     } else if (keyCode === 37) {
+      setDirection("left");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
-        const updatedBoard = mergeUpperColumn(board, columnIndex, "left");
+        const updatedBoard = mergeUpperColumn(board, columnIndex);
         setBoard(updatedBoard);
       }
       setKeyCode(0);
@@ -168,11 +165,46 @@ export default function Home() {
     };
   }, [keyCode]);
 
+  let startX: 0;
+  let startY: 0;
+  const handleTouchStart = (event: any) => {
+    startX = event.touches[0].clientX;
+    startY = event.touches[0].clientY;
+  };
+
+  const handleTouchMove = (event: any) => {
+    event.preventDefault(); // Prevent scrolling while swiping
+    const deltaX = event.touches[0].clientX - startX;
+    const deltaY = event.touches[0].clientY - startY;
+
+    if (Math.abs(deltaX) > Math.abs(deltaY)) {
+      if (deltaX > 0) {
+        setDirection("right");
+      } else {
+        setDirection("left");
+      }
+    } else {
+      if (deltaY > 0) {
+        setDirection("down");
+      } else {
+        setDirection("up");
+      }
+    }
+  };
+
+  const handleTouchEnd = () => {
+    setDirection("");
+  };
+
   return (
     <div className="container mt-5 px-3 py-5 game-container">
       <h1 className="text-center">2048 Game</h1>
-
-      <div className={styles.gameBoard}>
+      <div
+        className={styles.gameBoard}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+      >
         {board.map((row, rowIndex) => (
           <div key={rowIndex} className={styles.row}>
             {row.map((cellValue, colIndex) => (
