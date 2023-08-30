@@ -41,13 +41,15 @@ export default function Home() {
       const randomIndex = Math.floor(Math.random() * emptyCells.length);
       const randomCell = emptyCells[randomIndex];
       updatedBoard[randomCell.row][randomCell.col] = randomSquare;
-    } else {
-      alert("Game Over");
     }
     setBoard(updatedBoard);
   };
 
-  const mergeUpperColumn = (board: any, columnIndex: number) => {
+  const mergeUpperColumn = (
+    board: any,
+    columnIndex: number,
+    direction: string
+  ) => {
     const newBoard = [...board];
     const column = newBoard.map((row) => row[columnIndex]);
     const rowOrColumn = direction === "upper" ? column : newBoard[columnIndex];
@@ -84,7 +86,11 @@ export default function Home() {
     return newBoard;
   };
 
-  const mergeLowerColumn = (board: any, columnIndex: number) => {
+  const mergeLowerColumn = (
+    board: any,
+    columnIndex: number,
+    direction: string
+  ) => {
     const newBoard = [...board];
     const column = newBoard.map((row) => row[columnIndex]);
 
@@ -126,33 +132,33 @@ export default function Home() {
 
   const handleMove = () => {
     if (keyCode === 38 || direction === "upper") {
-      setDirection("upper");
+      console.log(keyCode, direction, "enter-upper");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
-        const updatedBoard = mergeUpperColumn(board, columnIndex);
+        const updatedBoard = mergeUpperColumn(board, columnIndex, "upper");
         setBoard(updatedBoard);
       }
       setKeyCode(0);
       placeRandomSquareInBoard(board);
     } else if (keyCode === 40 || direction === "lower") {
-      setDirection("lower");
+      console.log(keyCode, direction, "enter-lower");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
-        const updatedBoard = mergeLowerColumn(board, columnIndex);
+        const updatedBoard = mergeLowerColumn(board, columnIndex, "lower");
         setBoard(updatedBoard);
       }
       setKeyCode(0);
       placeRandomSquareInBoard(board);
     } else if (keyCode === 39 || direction === "right") {
-      setDirection("right");
+      console.log(keyCode, direction, "enter-right");
       for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
-        const updatedBoard = mergeLowerColumn(board, rowIndex);
+        const updatedBoard = mergeLowerColumn(board, rowIndex, "right");
         setBoard(updatedBoard);
       }
       setKeyCode(0);
       placeRandomSquareInBoard(board);
     } else if (keyCode === 37 || direction === "left") {
-      setDirection("left");
+      console.log(keyCode, direction, "enter-left");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
-        const updatedBoard = mergeUpperColumn(board, columnIndex);
+        const updatedBoard = mergeUpperColumn(board, columnIndex, "left");
         setBoard(updatedBoard);
       }
       setKeyCode(0);
@@ -190,8 +196,10 @@ export default function Home() {
     } else {
       if (deltaY > 0) {
         setDirection("lower");
-      } else {
+      } else if (deltaY < 0) {
         setDirection("upper");
+      } else {
+        setDirection("");
       }
     }
   };
