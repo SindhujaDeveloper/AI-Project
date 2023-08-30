@@ -163,11 +163,12 @@ export default function Home() {
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
-  }, [keyCode]);
+  }, [keyCode, direction]);
 
   let startX: 0;
   let startY: 0;
   const handleTouchStart = (event: any) => {
+    console.log(event.touches[0], "touch");
     startX = event.touches[0].clientX;
     startY = event.touches[0].clientY;
   };
@@ -185,9 +186,9 @@ export default function Home() {
       }
     } else {
       if (deltaY > 0) {
-        setDirection("down");
+        setDirection("lower");
       } else {
-        setDirection("up");
+        setDirection("upper");
       }
     }
   };
