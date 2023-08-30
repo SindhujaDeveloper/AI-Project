@@ -124,9 +124,8 @@ export default function Home() {
     return newBoard;
   };
 
-  useEffect(() => {
-    window.addEventListener("keydown", handleKeyPress);
-    if (keyCode === 38) {
+  const handleMove = () => {
+    if (keyCode === 38 || direction === "upper") {
       setDirection("upper");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
         const updatedBoard = mergeUpperColumn(board, columnIndex);
@@ -134,8 +133,7 @@ export default function Home() {
       }
       setKeyCode(0);
       placeRandomSquareInBoard(board);
-    }
-    if (keyCode === 40) {
+    } else if (keyCode === 40 || direction === "lower") {
       setDirection("lower");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
         const updatedBoard = mergeLowerColumn(board, columnIndex);
@@ -143,7 +141,7 @@ export default function Home() {
       }
       setKeyCode(0);
       placeRandomSquareInBoard(board);
-    } else if (keyCode === 39) {
+    } else if (keyCode === 39 || direction === "right") {
       setDirection("right");
       for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
         const updatedBoard = mergeLowerColumn(board, rowIndex);
@@ -151,7 +149,7 @@ export default function Home() {
       }
       setKeyCode(0);
       placeRandomSquareInBoard(board);
-    } else if (keyCode === 37) {
+    } else if (keyCode === 37 || direction === "left") {
       setDirection("left");
       for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
         const updatedBoard = mergeUpperColumn(board, columnIndex);
@@ -160,6 +158,11 @@ export default function Home() {
       setKeyCode(0);
       placeRandomSquareInBoard(board);
     }
+  };
+
+  useEffect(() => {
+    window.addEventListener("keydown", handleKeyPress);
+    handleMove();
     return () => {
       window.removeEventListener("keydown", handleKeyPress);
     };
