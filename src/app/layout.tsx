@@ -30,7 +30,8 @@ export default function RootLayout({
           name="google-site-verification"
           content="Zadpj3bBaM7_6ZxzwU8pEi_jFLCN0zQfhoJFA-oghkQ"
         />
-        <link rel="canonical" href="https://your-2048-game-site.com" />
+        <link rel="canonical" href="https://2048-new-game.netlify.app" />
+        <link rel="canonical" href="https://nextjs.org" />
         <title>Play 2048 Game - New Modes, Cupcakes, 8x8 Board, and More</title>
       </head>
       <body className={inter.className}>{children}</body>
