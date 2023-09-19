@@ -1,8 +1,22 @@
 .gameBoard {
+  margin-top: 2%;
   background-color: #c5b7a9;
-  padding: 28%;
-  border-radius: 10px;
+  padding: 2%;
+  /* width: 45%; */
+  width: 630px;
   box-shadow: 0px 4px 10px rgba(231, 26, 26, 0.1);
+  border: 2px solid aliceblue;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
+.title {
+  margin-top: 3%;
 }
 
 .row {
@@ -13,34 +27,13 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 25vw;
-  height: 10vw;
+  width: 160px;
+  height: 100px;
   background-color: #d4cec7;
   font-size: 24px;
   font-weight: bold;
-  border-radius: 0.5vw;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.buttons {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  margin-top: 30px;
-}
-
-.newGameBtn {
-  margin-right: 15px;
-  width: 13%;
-  /* background-color: palevioletred;
-  border-color: #FFFFFF; */
-}
-
-.resetBtn {
-  width: 13%;
-  /* background-color: brown;
-  border-color: #FFFFFF; */
+  border: 2px solid aliceblue;
 }
 
 .tile-2 {
@@ -99,17 +92,81 @@
 }
 
 
+.buttons {
+  margin-top: 3%;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
 
-@media screen and (min-width:920px) {
-  .gameBoard {
-    padding: 2% 2% 2% 2%;
-    margin-left: 460px;
-    margin-top: 50px;
-    width: 360px
+.newGameBtn,
+.resetBtn {
+  flex: 0.19;
+  padding: 1vw 2vw;
+  font-size: 24px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.newGameBtn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.resetBtn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.gameOverlay {
+  position: fixed;
+  padding-bottom: 2%;
+  top: 17%;
+  left: 29%;
+  width: 42%;
+  height: 65%;
+  background-color: rgb(165 151 151 / 70%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gameOverMessage {
+  background-color: #3d3f3f;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-size: 35px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.askImageContainer {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.askImage {
+  width: 80px;
+  height: auto;
+  cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+  .buttons {
+    flex-direction: column;
+    align-items: center;
   }
 
   .cell {
-    width: 19vw;
-    height: 5vw;
+    width: 100px;
+    height: 80px;
   }
 }

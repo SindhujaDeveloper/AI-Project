@@ -16,6 +16,24 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta
+          name="description"
+          content="Play the popular 2048 game online with new game modes and challenges. Enjoy 2048 cupcakes, 8x8 board, hacked versions, and more. Puzzle game fun for all ages."
+        />
+        <meta
+          name="keywords"
+          content="2048 game, 2048 new game, 2048 cupcakes, 2048 8x8, hacked 2048, online 2048, 2048 pokemon, puzzle game, play 2048, 2048 puzzles, puzzle games, 2048 god mode, 2020 puzzle game"
+        />
+        <meta
+          name="google-site-verification"
+          content="Zadpj3bBaM7_6ZxzwU8pEi_jFLCN0zQfhoJFA-oghkQ"
+        />
+        <link rel="canonical" href="https://2048-new-game.netlify.app" />
+        <link rel="canonical" href="https://nextjs.org" />
+        <title>Play 2048 Game - New Modes, Cupcakes, 8x8 Board, and More</title>
+      </head>
       <body className={inter.className}>{children}</body>
     </html>
   );
