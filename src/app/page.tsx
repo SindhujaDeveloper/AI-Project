@@ -3,18 +3,25 @@ import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./page.module.css";
 import { Button, Container } from "react-bootstrap";
+import Chatbot from "./chatbot";
+import askImage from "../app/assets/ask.jpg";
 
+export const fillRandomCellWith2 = (initialBoard: number[][]) => {
+  const rowIndex = Math.floor(Math.random() * 4);
+  const columnIndex = Math.floor(Math.random() * 4);
+  if (initialBoard[rowIndex][columnIndex] === 0) {
+    initialBoard[rowIndex][columnIndex] = 2;
+  }
+  return initialBoard;
+};
 export default function Home() {
+  const initialBoard = Array.from({ length: 4 }, () => Array(4).fill(0));
+
   const [keyCode, setKeyCode] = useState(0);
   const [direction, setDirection] = useState("");
+  const [isShow, setIsShow] = useState(false);
 
-  const initialBoard = [
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 0, 0, 0],
-    [0, 2, 0, 0],
-  ];
-  const [board, setBoard] = useState(initialBoard);
+  const [board, setBoard] = useState(fillRandomCellWith2(initialBoard));
 
   const handleKeyPress = (event: any) => {
     setKeyCode(event.keyCode);
@@ -24,6 +31,46 @@ export default function Home() {
     const squareNumbers = [2, 4];
     const randomIndex = Math.floor(Math.random() * squareNumbers.length);
     return squareNumbers[randomIndex];
+  };
+
+  const isGameOver = () => {
+    // Check for valid moves (no more valid moves)
+    for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
+      for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
+        const currentCell = board[rowIndex][columnIndex];
+
+        // Check if adjacent cells can merge
+        if (
+          (rowIndex > 0 && currentCell === board[rowIndex - 1][columnIndex]) ||
+          (rowIndex < 3 && currentCell === board[rowIndex + 1][columnIndex]) ||
+          (columnIndex > 0 &&
+            currentCell === board[rowIndex][columnIndex - 1]) ||
+          (columnIndex < 3 && currentCell === board[rowIndex][columnIndex + 1])
+        ) {
+          return false; // There's a valid move, game is not over
+        }
+      }
+    }
+
+    // Check if 2048 tile is present
+    for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
+      for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
+        if (board[rowIndex][columnIndex] === 2048) {
+          return true; // Player has won
+        }
+      }
+    }
+
+    // Check if there are empty tiles left
+    for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
+      for (let columnIndex = 0; columnIndex < 4; columnIndex++) {
+        if (board[rowIndex][columnIndex] === 0) {
+          return false; // There are empty tiles, game is not over
+        }
+      }
+    }
+
+    return true; // No valid moves and no empty tiles, game is over
   };
 
   const placeRandomSquareInBoard = (updatedBoard: any) => {
@@ -159,7 +206,19 @@ export default function Home() {
       }
       setKeyCode(0);
       placeRandomSquareInBoard(board);
+    } else {
+      if (isGameOver()) {
+        console.log("GameOver");
+      }
     }
+  };
+
+  let startX: 0;
+  let startY: 0;
+  const handleTouchStart = (event: any) => {
+    console.log(event.touches[0], "touch");
+    startX = event.touches[0].clientX;
+    startY = event.touches[0].clientY;
   };
 
   useEffect(() => {
@@ -169,14 +228,6 @@ export default function Home() {
       window.removeEventListener("keydown", handleKeyPress);
     };
   }, [keyCode, direction]);
-
-  let startX: 0;
-  let startY: 0;
-  const handleTouchStart = (event: any) => {
-    console.log(event.touches[0], "touch");
-    startX = event.touches[0].clientX;
-    startY = event.touches[0].clientY;
-  };
 
   const handleTouchMove = (event: any) => {
     event.preventDefault(); // Prevent scrolling while swiping
@@ -205,7 +256,7 @@ export default function Home() {
   };
 
   return (
-    <Container>
+    <Container style={{}}>
       <h1 className={`text-center ${styles.title}`}>2048 Game</h1>
       <div className={styles.main}>
         <div
@@ -228,23 +279,31 @@ export default function Home() {
           ))}
         </div>
       </div>
-
-        <div className={styles.buttons}>
-          <Button
-            className={styles.newGameBtn}
-            variant="info"
-            onClick={() => setBoard(initialBoard)}
-          >
-            New Game
-          </Button>
-          <Button
-            className={styles.resetBtn}
-            variant="danger"
-            onClick={() => setBoard(initialBoard)}
-          >
-            Reset
-          </Button>
+      {isGameOver() && (
+        <div className={styles.gameOverlay}>
+          <div className={styles.gameOverMessage}>Game Over</div>
         </div>
+      )}
+      <div className={styles.buttons}>
+        <Button
+          className={styles.newGameBtn}
+          variant="info"
+          onClick={() => setBoard(initialBoard)}
+        >
+          New Game
+        </Button>
+        <Button
+          className={styles.resetBtn}
+          variant="danger"
+          onClick={() => setBoard(initialBoard)}
+        >
+          Reset
+        </Button>
+      </div>
+      <div className={styles.askImageContainer} onClick={() => setIsShow(true)}>
+        <img src={askImage?.src} alt="Ask" className={styles.askImage} />
+      </div>
+      <Chatbot isModalOpen={isShow} modalClose={() => setIsShow(false)} />
     </Container>
   );
 }
