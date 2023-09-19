@@ -6,14 +6,6 @@ import { Button, Container } from "react-bootstrap";
 import Chatbot from "./chatbot";
 import askImage from "../app/assets/ask.jpg";
 
-export const fillRandomCellWith2 = (initialBoard: number[][]) => {
-  const rowIndex = Math.floor(Math.random() * 4);
-  const columnIndex = Math.floor(Math.random() * 4);
-  if (initialBoard[rowIndex][columnIndex] === 0) {
-    initialBoard[rowIndex][columnIndex] = 2;
-  }
-  return initialBoard;
-};
 export default function Home() {
   const initialBoard = Array.from({ length: 4 }, () => Array(4).fill(0));
 
@@ -21,7 +13,16 @@ export default function Home() {
   const [direction, setDirection] = useState("");
   const [isShow, setIsShow] = useState(false);
 
-  const [board, setBoard] = useState(fillRandomCellWith2(initialBoard));
+  const fillInitialRandomCell = (initialBoard: number[][]) => {
+    const rowIndex = Math.floor(Math.random() * 4);
+    const columnIndex = Math.floor(Math.random() * 4);
+    if (initialBoard[rowIndex][columnIndex] === 0) {
+      initialBoard[rowIndex][columnIndex] = 2;
+    }
+    return initialBoard;
+  };
+  
+  const [board, setBoard] = useState(fillInitialRandomCell(initialBoard));
 
   const handleKeyPress = (event: any) => {
     setKeyCode(event.keyCode);
