@@ -30,7 +30,7 @@ const Chatbot = ({ isModalOpen, modalClose }: IModalPopUp) => {
     try {
       const model = new ChatOpenAI({
         streaming: true,
-        openAIApiKey: "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",
+        openAIApiKey: "",
       });
       const memory = new BufferMemory();
       const chain = new ConversationChain({ llm: model, memory });
