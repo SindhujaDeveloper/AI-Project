@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { BufferMemory } from "langchain/memory";
 import { ConversationChain } from "langchain/chains";
 
-export async function POST(request) {
+export async function POST(request:any) {
   if (!process.env.OPEN_AI_KEY) {
     return NextResponse.json(
       {
