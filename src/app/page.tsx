@@ -2,11 +2,11 @@
 import { useEffect, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import styles from "./page.module.css";
-import { Button, Container } from "react-bootstrap";
+import { Button, Container, Modal } from "react-bootstrap";
 import Chatbot from "./chatbot";
 import askImage from "../app/assets/ask.jpg";
 
-export default function Home() {
+const Home = () => {
   const initialBoard = Array.from({ length: 4 }, () => Array(4).fill(0));
 
   const [keyCode, setKeyCode] = useState(0);
@@ -301,6 +301,7 @@ export default function Home() {
           Reset
         </Button>
       </div>
+
       <div className={styles.askImageContainer} onClick={() => setIsShow(true)}>
         <img src={askImage?.src} alt="Ask" className={styles.askImage} />
       </div>
@@ -308,3 +309,5 @@ export default function Home() {
     </Container>
   );
 }
+
+export default Home;

@@ -1,10 +1,6 @@
 import React, { useState } from "react";
 import { Modal, CloseButton, Button, Container, Form } from "react-bootstrap";
 import "./chatbot.css";
-import { ChatOpenAI } from "langchain/chat_models/openai";
-import { BufferMemory } from "langchain/memory";
-import { ConversationChain } from "langchain/chains";
-import { HumanMessage, AIMessage } from "langchain/schema";
 
 export interface IModalPopUp {
   isModalOpen: boolean;
@@ -28,18 +24,20 @@ const Chatbot = ({ isModalOpen, modalClose }: IModalPopUp) => {
       setMessageStore([{ user: "", system: "" }]);
     }
     try {
-      const model = new ChatOpenAI({
-        streaming: true,
-        openAIApiKey: "",
-      });
-      const memory = new BufferMemory();
-      const chain = new ConversationChain({ llm: model, memory });
-      const botReply = await chain.call({
-        input: `Assume, you are a funny chatbot.${message}`,
-      });
+      // const model = new ChatOpenAI({
+      //   streaming: true,
+      //   openAIApiKey: openAIKey,
+      // });
+      // console.log(process.env.OPEN_AI_KEY, "");
+
+      // const memory = new BufferMemory();
+      // const chain = new ConversationChain({ llm: model, memory });
+      // const botReply = await chain.call({
+      //   input: `Assume, you are a funny chatbot.${message}`,
+      // });
       // const chat = new ChatOpenAI({
       //   streaming: true,
-      //   openAIApiKey: "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",
+      //   openAIApiKey: "token",
       // });
 
       // const botReply = await chat.call(
@@ -74,16 +72,26 @@ const Chatbot = ({ isModalOpen, modalClose }: IModalPopUp) => {
       //   {
       //     headers: {
       //       Authorization:
-      //         "Bearer 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",
+      //         "Bearer token",
       //     },
       //   }
       // );
       // const botReply = openaiResponse.data.choices[0].message.content;
-      new HumanMessage(message),
-      new AIMessage(botReply.response),
-      messageStore.concat({ user: message, system: botReply.response });
+      // new HumanMessage(message),
+      //   new AIMessage(botReply.response),
+
+      const botReply = await fetch("/api/speechToText", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message}),
+      });
+      const data = await botReply.json();
+
+      messageStore.concat({ user: message, system: data.message.response });
       setMessageStore(
-        messageStore.concat({ user: message, system: botReply.response })
+        messageStore.concat({ user: message, system: data.message.response })
       );
     } catch (error) {
       console.error("Error sending message to OpenAI:", error);
@@ -115,7 +123,6 @@ const Chatbot = ({ isModalOpen, modalClose }: IModalPopUp) => {
         </Container>
       </Modal.Body>
       <Modal.Footer>
-        
         <div className="messageInput">
           <div className="messageCol col-10">
             <Form.Control
