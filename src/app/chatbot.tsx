@@ -55,15 +55,16 @@ const Chatbot = () => {
               )}
               {
                 it.images && it.images.length > 1 &&
-                it.images.map((it: { url: string }) => {
+                it.images.map((it: { url: string },index) => {
                   return (
-                    <div className="bot-message">
-                      <Image src={it?.url} />
+                    <div className="bot-message" key={`image-${index}`}>
+                      <Image src={it?.url} alt={`inage-${index}`}/>
                     </div>
                   )
                 })
               }
             </>
+            
           ))}
       </div>
       <div className="messageInput">
