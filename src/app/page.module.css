@@ -1,6 +1,172 @@
+.gameBoard {
+  margin-top: 2%;
+  background-color: #c5b7a9;
+  padding: 2%;
+  /* width: 45%; */
+  width: 630px;
+  box-shadow: 0px 4px 10px rgba(231, 26, 26, 0.1);
+  border: 2px solid aliceblue;
+}
+
 .main {
   display: flex;
   align-items: center;
   justify-content: center;
   align-content: center;
+}
+
+.title {
+  margin-top: 3%;
+}
+
+.row {
+  display: flex;
+}
+
+.cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 160px;
+  height: 100px;
+  background-color: #d4cec7;
+  font-size: 24px;
+  font-weight: bold;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border: 2px solid aliceblue;
+}
+
+.tile-2 {
+  background-color: #e096cf;
+  color: #776e65;
+}
+
+.tile-4 {
+  background-color: #959fbb;
+  color: #776e65;
+}
+
+.tile-8 {
+  background-color: #d1aa97;
+  color: white;
+}
+
+.tile-16 {
+  background-color: #94d28d;
+  color: white;
+}
+
+.tile-32 {
+  background-color: #974a51;
+  color: white;
+}
+
+.tile-64 {
+  background-color: #b6b87f;
+  color: white;
+}
+
+.tile-128 {
+  background-color: #8aebe3;
+  color: white;
+}
+
+.tile-256 {
+  background-color: #959234;
+  color: white;
+}
+
+.tile-512 {
+  background-color: #392c60;
+  color: white;
+}
+
+.tile-1024 {
+  background-color: #4a1c0a;
+  color: white;
+}
+
+.tile-2048 {
+  background-color: #064640;
+  color: white;
+}
+
+
+.buttons {
+  margin-top: 3%;
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.newGameBtn,
+.resetBtn {
+  flex: 0.19;
+  padding: 1vw 2vw;
+  font-size: 24px;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.newGameBtn {
+  background-color: #17a2b8;
+  color: white;
+}
+
+.resetBtn {
+  background-color: #dc3545;
+  color: white;
+}
+
+.gameOverlay {
+  position: fixed;
+  padding-bottom: 2%;
+  top: 17%;
+  left: 29%;
+  width: 42%;
+  height: 65%;
+  background-color: rgb(165 151 151 / 70%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.gameOverMessage {
+  background-color: #3d3f3f;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  font-size: 35px;
+  font-weight: 900;
+  color: #fff;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.askImageContainer {
+  position: fixed;
+  bottom: 10px;
+  right: 10px;
+  z-index: 1000;
+}
+
+.askImage {
+  width: 80px;
+  height: auto;
+  cursor: pointer;
+}
+
+
+@media (max-width: 768px) {
+  .buttons {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .cell {
+    width: 100px;
+    height: 80px;
+  }
 }
