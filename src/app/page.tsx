@@ -300,6 +300,7 @@ const Home = () => {
         >
           Reset
         </Button>
+        
       </div>
 
       <div className={styles.askImageContainer} onClick={() => setIsShow(true)}>
